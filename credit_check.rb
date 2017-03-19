@@ -1,80 +1,71 @@
-#TO DO: clean up method variables so sibling methods aren't sharing variables'
+# CreditCheck class performs Luhn Algorithm
+class CreditCheck
+  
+  # This function accepts a credit card number and calls the main program function
+  def initialize(card_number) 
+    @card_number = card_number
+    is_valid?
+  end
 
-def format_number(card_number)
-    value = card_number.split("").to_a.reverse
-    new_number_array = []
-    value.each do |c| 
-        new_number_array.push(c.to_i)
+  # This is the main function of the program: Formats number, calculates validity, 
+  # and prints the result 
+  def is_valid?
+    @card_number = format_card_number(@card_number)
+    @card_number = double_odd_digits(@card_number)
+    @card_number = sum_digits_over_10(@card_number)
+    @card_number = sum_all_digits(@card_number)
+    check_validity(@card_number) 
+  end
+
+  # This function splits card number into digits, converts from string to integers, 
+  # and reverses the order of the digits
+  def format_card_number(card_string)
+    card_string.reverse.split("").map! do |char|
+      char.to_i
     end
-    return new_number_array
-end
+  end 
 
-def doubler(account_id)
-    account_id.each_index do |i|
-        unless i.even? 
-            account_id[i] *= 2
-        end
+  # This function doubles the value of every other digit, beginning from the check digit
+  def double_odd_digits(numbers_to_double)
+    doubles = []
+    numbers_to_double.each_with_index do |num, index|
+      num *= 2 if index.odd?
+      doubles << num
     end
-end
+    return doubles
+  end
 
-def sum_digits_over_10(account_id)
-    new_account_id = []
-    account_id.each do |value|
-        if value > 9
-            array = value.to_s.split("")
-            value = array[0].to_i + array[1].to_i
-        end
-        new_account_id << value
+  # This function sums the individual digits of any numbers greater than 9 in the card 
+  # number array
+  def sum_digits_over_10(products_to_sum)
+    products_to_sum.map do |value|
+      if value > 9
+        value -= 9
+      else
+        value
+      end
     end
-    return new_account_id
+  end
 
-end
-
-def sum_all_digits(digits)
-    total = 0
-    digits.each do |d|
-        total += d
+  # This function sums together all digits in the card number array
+  def sum_all_digits(digits_to_sum)
+    digits_to_sum.reduce(0) do |sum, num|
+      sum + num
     end
-    return total
+  end
+
+  # This function checks for even division by ten and prints result
+  def check_validity(processed_number)
+    if processed_number % 10 == 0
+      valid = true
+      puts "The number is valid!"
+    else
+      valid = false
+      puts "The number is invalid!"
+    end
+  end
+
 end
 
-card_number = "4929735477250543"
-account_identifier = format_number(card_number)
-puts "the account identifier is #{account_identifier}"
-doubler(account_identifier)
-puts "after doubler, the account identifier is #{account_identifier}"
-account_identifier = sum_digits_over_10(account_identifier)
-puts "after sum digits, account identifier is now #{account_identifier}"
-summed_result = sum_all_digits(account_identifier)
-puts "summed result is #{summed_result}"
-
-if summed_result % 10 == 0 
-    valid = true
-end
-
-
-
-
-
-
-# puts account_identifier[0].class
-# puts account_identifier
-
-# doubled_identifier = []
-# counter = 0
-# double_identifier = identifier.map do |num| 
-#      if counter.even?
-#          num
-#      else
-#          num *=2
-#      end
-#      counter +=
-# end
-# puts "the final array for tonight is #{double_identifier}"
-# valid = false
-
-# Your Luhn Algorithm Here
-
-# Output
-## If it is valid, print "The number is valid!"
-## If it is invalid, print "The number is invalid!"
+# Use transaction number as variable, credit card number as argument
+transaction_1 = CreditCheck.new("4929735477250543")
