@@ -2,6 +2,7 @@ class CreditCheck
   
   def initialize(card_number) 
     @card_number = card_number
+    @valid = false
     is_valid?
   end
  
@@ -10,7 +11,8 @@ class CreditCheck
     @card_number = double_odd_digits(@card_number)
     @card_number = sum_digits_over_10(@card_number)
     @card_number = sum_all_digits(@card_number)
-    check_validity(@card_number) 
+    check_validity(@card_number)
+    output 
   end
 
   def format_card_number(card_string)
@@ -45,11 +47,13 @@ class CreditCheck
   end
 
   def check_validity(processed_number)
-    if processed_number % 10 == 0
-      valid = true
+    @valid = true if processed_number % 10 == 0
+  end
+
+  def output
+    if @valid == true
       puts "The number is valid!"
     else
-      valid = false
       puts "The number is invalid!"
     end
   end
